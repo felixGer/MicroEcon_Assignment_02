@@ -4,6 +4,7 @@ setwd("C:/Users/felix/Documents/GitHub/MicroEcon_Assignment_02")
 library("stats")
 library("tidyverse")
 library("haven")
+library("xtable")
 df = as.data.frame(read_dta(file = "titanic.dta"))
 
 
@@ -26,11 +27,22 @@ Probit_Model_Estimate = glm(survived ~ class1 + class2 + class3 + ageadult  + se
 ### b. Marginal Effect
 
 Beta_Sex = Probit_Model_Estimate[["coefficients"]]["sexmale"]
-eq = function(x){pnorm(x + Beta_Sex) - pnorm(x) }
-curve(eq(x), from=-5, to=5, , xlab="x", ylab="y")
+ME = function(x){pnorm(x + Beta_Sex) - pnorm(x) }
+curve(ME(x), from=-5, to=5, , xlab="z", ylab="Marginal-Effect of Male", xaxp  = c(-4, 4, 16))
 
+## ii. Compute the maximum marginal effect for out of the set of discrete values
 
+covariate_matrix_all_possible_values = matrix(c(1,1,0,0,1, 1,0,1,0,1, 1, 0,0,1,1, 1, 0,0,0,1, 1, 1,0,0,0,1,  0,1,0,0, 1, 0,0,1,0,1, 0,0,0,0), byrow = TRUE, nrow = 8, ncol = 5)
 
+#compute xiB for each value:
+xiB_all_possible_values = Probit_Model_Estimate[["coefficients"]][1:5] %*% t(covariate_matrix_all_possible_values)
+
+#compute Marginal effect for each value:
+ME_all_possible_values = ME(xiB_all_possible_values)
+
+cbind(covariate_matrix_all_possible_values, t(xiB_all_possible_values), t(ME_all_possible_values))
+
+xtable(cbind(covariate_matrix_all_possible_values, t(xiB_all_possible_values), t(ME_all_possible_values)))
 #####
 #OLD
 
