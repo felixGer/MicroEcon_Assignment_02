@@ -1,13 +1,11 @@
 #setwd load data and package
 rm(list=ls())
-setwd("C:/Users/felix/Documents/GitHub/MicroEcon_Assignment_02")
+#setwd("C:/Users/felix/Documents/GitHub/MicroEcon_Assignment_02")
 library("stats")
 library("tidyverse")
 library("haven")
 library("xtable")
 df = as.data.frame(read_dta(file = "titanic.dta"))
-
-
 library(dplyr)
 library(sjmisc)
 
